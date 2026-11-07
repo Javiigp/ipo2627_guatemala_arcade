@@ -1,0 +1,17 @@
+/*
+ * Hoja principal: solo importa el resto.
+ * Cada fichero se ocupa de UN aspecto del diseño para mantenerlos separados:
+ *   reset       → unificación entre navegadores
+ *   cromatico   → color (paleta complementaria en HSL)
+ *   tipografico → fuentes, tamaños y pesos
+ *   espacial    → cajas, unidades y composición (flex / grid)
+ *   cinetico    → transiciones y animaciones
+ * Las capas (@layer) fijan el orden de prioridad de forma explícita.
+ */
+@layer reset, cromatico, tipografico, espacial, cinetico;
+
+@import url('reset.css') layer(reset);
+@import url('cromatico.css') layer(cromatico);
+@import url('tipografico.css') layer(tipografico);
+@import url('espacial.css') layer(espacial);
+@import url('cinetico.css') layer(cinetico);

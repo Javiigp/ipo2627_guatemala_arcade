@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Juego arcade de carreras de coches desarrollado con Canvas API" />
+    <title>Circuito Arcade</title>
+    <link rel="icon" href="img/icono.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script type="module" src="js/main.js"></script>
+  </head>
+
+  <body class="app">
+    <header class="cabecera">
+      <h1 class="cabecera__titulo">Circuito <span class="cabecera__destacado">Arcade</span></h1>
+      <nav class="cabecera__nav" aria-label="Ayuda">
+        <button id="btnAyuda" class="boton boton--secundario" type="button" aria-haspopup="dialog">Ayuda</button>
+      </nav>
+    </header>
+
+    <main class="app__contenido">
+      <!-- Panel de ajustes previos a la carrera -->
+      <aside class="ajustes" aria-labelledby="tituloAjustes">
+        <h2 id="tituloAjustes" class="ajustes__titulo">Ajustes de carrera</h2>
+        <form id="formAjustes" class="ajustes__form">
+          <fieldset id="grupoAjustes" class="ajustes__grupo">
+            <legend class="ajustes__leyenda">Se aplican al pulsar Comenzar</legend>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="ajusteVueltas">Vueltas</label>
+              <input class="campo__rango" id="ajusteVueltas" name="vueltas" type="range" min="1" max="7" value="3" />
+              <output class="campo__valor" for="ajusteVueltas">3</output>
+            </div>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="ajusteRivales">Rivales</label>
+              <input class="campo__rango" id="ajusteRivales" name="rivales" type="range" min="0" max="3" value="3" />
+              <output class="campo__valor" for="ajusteRivales">3</output>
+            </div>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="ajusteObstaculos">Obstáculos</label>
+              <input class="campo__rango" id="ajusteObstaculos" name="obstaculos" type="range" min="0" max="12" value="6" />
+              <output class="campo__valor" for="ajusteObstaculos">6</output>
+            </div>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="ajusteDificultad">Dificultad</label>
+              <select class="campo__selector" id="ajusteDificultad" name="dificultad">
+                <option value="facil">Fácil</option>
+                <option value="normal" selected>Normal</option>
+                <option value="dificil">Difícil</option>
+              </select>
+            </div>
+
+            <fieldset class="colores">
+              <legend class="colores__leyenda">Color de tu coche</legend>
+              <label class="colores__opcion">
+                <input class="colores__radio" type="radio" name="color" value="1" checked />
+                <span class="colores__muestra colores__muestra--1"></span> Naranja
+              </label>
+              <label class="colores__opcion">
+                <input class="colores__radio" type="radio" name="color" value="2" />
+                <span class="colores__muestra colores__muestra--2"></span> Azul
+              </label>
+              <label class="colores__opcion">
+                <input class="colores__radio" type="radio" name="color" value="3" />
+                <span class="colores__muestra colores__muestra--3"></span> Blanco
+              </label>
+              <label class="colores__opcion">
+                <input class="colores__radio" type="radio" name="color" value="4" />
+                <span class="colores__muestra colores__muestra--4"></span> Crema
+              </label>
+            </fieldset>
+          </fieldset>
+        </form>
+      </aside>
+
+      <!-- Zona de juego -->
+      <section class="juego" aria-labelledby="tituloJuego">
+        <h2 id="tituloJuego" class="juego__titulo">Carrera</h2>
+
+        <dl class="marcador">
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Vuelta</dt>
+            <dd class="marcador__valor" id="hudVuelta">1/3</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Posición</dt>
+            <dd class="marcador__valor" id="hudPosicion">4º/4</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Tiempo</dt>
+            <dd class="marcador__valor" id="hudTiempo">0:00.00</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Vuelta actual</dt>
+            <dd class="marcador__valor" id="hudTiempoVuelta">–:––.––</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Mejor vuelta</dt>
+            <dd class="marcador__valor" id="hudMejor">–:––.––</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Velocidad</dt>
+            <dd class="marcador__valor" id="hudVelocidad">0 km/h</dd>
+          </div>
+          <div class="marcador__dato">
+            <dt class="marcador__etiqueta">Integridad</dt>
+            <dd class="marcador__valor marcador__valor--medidor">
+              <span id="hudIntegridadTexto">100 %</span>
+              <meter class="marcador__medidor" id="hudIntegridad" min="0" max="100" low="35" high="70" optimum="100" value="100"></meter>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="escena" id="escena">
+          <canvas
+            id="lienzo"
+            class="escena__lienzo"
+            tabindex="0"
+            role="img"
+            aria-label="Circuito visto desde arriba con los coches en carrera">
+            Tu navegador no admite Canvas.
+          </canvas>
+          <p class="alerta" id="alerta" role="status" hidden></p>
+          <div class="aviso" id="aviso" aria-live="polite">
+            <p class="aviso__titulo" id="avisoTitulo">¿Listo?</p>
+            <p class="aviso__texto" id="avisoTexto">Elige los ajustes y pulsa Comenzar</p>
+          </div>
+        </div>
+
+        <menu class="controles" aria-label="Control de la partida">
+          <li><button id="btnComenzar" class="boton boton--primario" type="button">Comenzar</button></li>
+          <li><button id="btnPausar" class="boton" type="button" aria-pressed="false" disabled>Pausar</button></li>
+          <li><button id="btnFinalizar" class="boton" type="button" disabled>Finalizar</button></li>
+        </menu>
+        <p class="juego__pista">Conduce con <kbd class="tecla">↑</kbd><kbd class="tecla">↓</kbd><kbd class="tecla">←</kbd><kbd class="tecla">→</kbd> o <kbd class="tecla">W</kbd><kbd class="tecla">A</kbd><kbd class="tecla">S</kbd><kbd class="tecla">D</kbd> · Pausa con <kbd class="tecla">P</kbd></p>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <p class="pie__texto">Proyecto Arcade · Interacción Persona-Ordenador · ETSII Universidad de Sevilla</p>
+    </footer>
+
+    <!-- Ayuda: reglas del juego -->
+    <dialog id="dialogoAyuda" class="dialogo" aria-labelledby="tituloAyuda">
+      <article class="dialogo__contenido">
+        <h2 id="tituloAyuda" class="dialogo__titulo">Cómo se juega</h2>
+
+        <section class="dialogo__seccion">
+          <h3 class="dialogo__subtitulo">Objetivo</h3>
+          <p class="dialogo__texto">
+            Completa las vueltas antes que tus rivales. Sales desde el último puesto de la parrilla: tendrás que adelantar.
+            Una vuelta solo cuenta si recorres el circuito entero; los atajos no valen.
+          </p>
+        </section>
+
+        <section class="dialogo__seccion">
+          <h3 class="dialogo__subtitulo">Controles</h3>
+          <table class="tabla">
+            <tbody>
+              <tr class="tabla__fila"><th class="tabla__celda" scope="row">Acelerar</th><td class="tabla__celda"><kbd class="tecla">↑</kbd> o <kbd class="tecla">W</kbd></td></tr>
+              <tr class="tabla__fila"><th class="tabla__celda" scope="row">Frenar / marcha atrás</th><td class="tabla__celda"><kbd class="tecla">↓</kbd> o <kbd class="tecla">S</kbd></td></tr>
+              <tr class="tabla__fila"><th class="tabla__celda" scope="row">Girar</th><td class="tabla__celda"><kbd class="tecla">←</kbd> <kbd class="tecla">→</kbd> o <kbd class="tecla">A</kbd> <kbd class="tecla">D</kbd></td></tr>
+              <tr class="tabla__fila"><th class="tabla__celda" scope="row">Pausar / reanudar</th><td class="tabla__celda"><kbd class="tecla">P</kbd></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="dialogo__seccion">
+          <h3 class="dialogo__subtitulo">Peligros</h3>
+          <ul class="dialogo__lista">
+            <li><strong>Conos:</strong> te frenan en seco y dañan el coche.</li>
+            <li><strong>Manchas de aceite:</strong> pierdes el agarre un instante y derrapas.</li>
+            <li><strong>Césped:</strong> fuera del asfalto la velocidad máxima cae a menos de la mitad.</li>
+            <li>
+              <strong>Salidas de pista:</strong> si pasas más de 3 segundos fuera del asfalto, o atajas por el césped
+              hasta otro tramo del circuito, quedas parado 1 segundo y vuelves a la pista en el último punto válido.
+              El cronómetro no se detiene.
+            </li>
+            <li><strong>Rivales:</strong> los golpes fuertes también dañan tu coche.</li>
+          </ul>
+          <p class="dialogo__texto">
+            El indicador de <strong>integridad</strong> muestra el estado del coche: cuanto más dañado, menos corre.
+            Si llega a 0 %, quedas fuera de carrera.
+          </p>
+        </section>
+
+        <form method="dialog" class="dialogo__acciones">
+          <button class="boton boton--primario">Entendido</button>
+        </form>
+      </article>
+    </dialog>
+
+    <!-- Resultado de la carrera -->
+    <dialog id="dialogoResultado" class="dialogo" aria-labelledby="resultadoTitulo">
+      <article class="dialogo__contenido resultado">
+        <h2 id="resultadoTitulo" class="dialogo__titulo">Resultado</h2>
+        <p id="resultadoResumen" class="dialogo__texto"></p>
+        <p id="resultadoRecord" class="resultado__record"></p>
+        <div class="resultado__columnas">
+          <section class="dialogo__seccion">
+            <h3 class="dialogo__subtitulo">Tus vueltas</h3>
+            <ol id="resultadoVueltas" class="resultado__lista"></ol>
+          </section>
+          <section class="dialogo__seccion">
+            <h3 class="dialogo__subtitulo">Clasificación</h3>
+            <ol id="resultadoClasificacion" class="resultado__lista"></ol>
+          </section>
+        </div>
+        <form method="dialog" class="dialogo__acciones">
+          <button id="btnRepetir" class="boton boton--primario" type="button">Correr otra vez</button>
+          <button class="boton">Cerrar</button>
+        </form>
+      </article>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+/*
+ * DISEÑO CINÉTICO: transiciones breves que confirman las acciones del usuario.
+ * Se desactivan si el sistema pide reducir el movimiento (accesibilidad).
+ */
+.boton {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 100ms ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+}
+
+.aviso--animado {
+  animation: aparecer 250ms ease-out;
+}
+
+.aviso--cuenta.aviso--animado .aviso__titulo {
+  animation: latido 600ms ease-out;
+}
+
+.alerta--penalizacion {
+  animation: latido 300ms ease-out;
+}
+
+/* Sacudida breve al chocar */
+.escena--impacto {
+  animation: temblor 250ms ease-in-out;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes latido {
+  from { transform: scale(1.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes temblor {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
