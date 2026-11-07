@@ -1,0 +1,120 @@
+/*
+ * DISEÑO TIPOGRÁFICO · Estrategia: DOS FUENTES CONTRASTADAS
+ *   - Display monoespaciada (estética arcade/marcador; los dígitos no "bailan"
+ *     al cambiar el cronómetro) → títulos, valores del marcador, botones y avisos.
+ *   - Sans-serif del sistema (máxima legibilidad) → textos y etiquetas.
+ * Se usan pilas de fuentes estándar del sistema: no hay descargas externas.
+ * Jerarquía con una escala modular (ratio 1.25) en rem.
+ */
+:root {
+  --fuente-display: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --fuente-texto: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --escala: 1.25;
+  --texto-base: 1rem;
+  --texto-s: calc(var(--texto-base) / var(--escala));
+  --texto-m: calc(var(--texto-base) * var(--escala));
+  --texto-l: calc(var(--texto-m) * var(--escala));
+  --texto-xl: calc(var(--texto-l) * var(--escala));
+  --texto-xxl: calc(var(--texto-xl) * var(--escala) * var(--escala));
+
+  --peso-normal: 400;
+  --peso-fuerte: 700;
+  --interlineado: 1.5;
+  --interlineado-titulo: 1.15;
+}
+
+.app {
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  line-height: var(--interlineado);
+}
+
+.cabecera__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-fuerte);
+  line-height: var(--interlineado-titulo);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ajustes__titulo,
+.juego__titulo,
+.dialogo__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-m);
+  font-weight: var(--peso-fuerte);
+  line-height: var(--interlineado-titulo);
+}
+
+.dialogo__titulo {
+  font-size: var(--texto-l);
+}
+
+.dialogo__subtitulo,
+.colores__leyenda,
+.campo__etiqueta {
+  font-weight: var(--peso-fuerte);
+}
+
+.dialogo__subtitulo {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-base);
+}
+
+.ajustes__leyenda,
+.marcador__etiqueta,
+.juego__pista,
+.pie__texto {
+  font-size: var(--texto-s);
+}
+
+.campo__valor,
+.marcador__valor,
+.resultado__lista,
+.resultado__record {
+  font-family: var(--fuente-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.marcador__valor {
+  font-size: var(--texto-m);
+  font-weight: var(--peso-fuerte);
+  white-space: nowrap;
+}
+
+.boton {
+  font-family: var(--fuente-display);
+  font-weight: var(--peso-fuerte);
+}
+
+.aviso__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--texto-xxl);
+  font-weight: var(--peso-fuerte);
+  line-height: 1;
+}
+
+.alerta {
+  font-family: var(--fuente-display);
+  font-weight: var(--peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.aviso__texto {
+  font-size: var(--texto-m);
+}
+
+.tecla {
+  font-family: var(--fuente-display);
+  font-size: 0.85em;
+}
+
+.tabla__celda {
+  text-align: start;
+}
+
+th.tabla__celda {
+  font-weight: var(--peso-normal);
+}

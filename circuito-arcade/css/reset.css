@@ -1,0 +1,36 @@
+/* Regla reset básica para unificar el punto de partida entre navegadores */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+canvas {
+  display: block;
+  max-inline-size: 100%;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Que [hidden] gane siempre, aunque el elemento tenga display: grid/flex */
+[hidden] {
+  display: none !important;
+}
+
+ul,
+ol,
+menu {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+}
